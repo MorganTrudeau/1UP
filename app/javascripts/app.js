@@ -9,7 +9,7 @@ import { default as contract } from 'truffle-contract'
 import auction_artifacts from '../../build/contracts/AuctionHouse.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
-var AuctionHouse = contract(metacoin_artifacts);
+var AuctionHouse = contract(auction_artifacts);
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -39,51 +39,43 @@ window.App = {
       accounts = accs;
       account = accounts[0];
 
-      self.refreshBalance();
+      document.getElementById("account").innerHTML = account;
     });
   },
 
-  setStatus: function(message) {
-    var status = document.getElementById("status");
-    status.innerHTML = message;
-  },
-
-  refreshBalance: function() {
-    var self = this;
-
-    var meta;
+  getAuctionIds: function() {
     AuctionHouse.deployed().then(function(instance) {
-      meta = instance;
-      return meta.getBalance.call(account, {from: account});
-    }).then(function(value) {
-      var balance_element = document.getElementById("balance");
-      balance_element.innerHTML = value.valueOf();
-    }).catch(function(e) {
-      console.log(e);
-      self.setStatus("Error getting balance; see log.");
+      return instance.getAuctionIds.call({from: account});
+    }).then(function(result) {
+      var auctionIdsLabel = document.getElementById("auctionIds");
+      console.log(result);
+      auctionIdsLabel.innerHTML = result.valueOf();
     });
   },
 
-  sendCoin: function() {
-    var self = this;
+  getAuction: function() {
+    var id = document.getElementById("id").value;
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.getAuction.call(id, {from: account});
+    }).then(function(result) {
+      var auctionLabel = document.getElementById("auction");
+      auctionLabel.innerHTML = result.valueOf();
+    });
+  },
 
-    var amount = parseInt(document.getElementById("amount").value);
-    var receiver = document.getElementById("receiver").value;
+  createAuction: function() {
+    var beneficiary = account;
+    var item = parseInt(document.getElementById("item").value);
+    var time = parseInt(document.getElementById("time").value);
+    var minPrice = parseInt(document.getElementById("minPrice").value);
 
-    this.setStatus("Initiating transaction... (please wait)");
-
-    var meta;
-    MetaCoin.deployed().then(function(instance) {
-      meta = instance;
-      return meta.sendCoin(receiver, amount, {from: account});
-    }).then(function() {
-      self.setStatus("Transaction complete!");
-      self.refreshBalance();
-    }).catch(function(e) {
-      console.log(e);
-      self.setStatus("Error sending coin; see log.");
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.createAuction(beneficiary,item,time,minPrice,{from: account});
+    }).then(function(result) {
+      console.log(result.tx);
     });
   }
+
 };
 
 window.addEventListener('load', function() {
@@ -93,9 +85,9 @@ window.addEventListener('load', function() {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
   } else {
-    console.warn("No web3 detected. Falling back to http://127.0.0.1:9545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
+    console.warn("No web3 detected. Falling back to http://127.0.0.1:7545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    window.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:9545"));
+    window.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
   }
 
   App.start();

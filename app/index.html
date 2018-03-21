@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MetaCoin - Truffle Webpack Demo w/ Frontend</title>
+  <title>EtherFarm - Truffle Webpack Demo w/ Frontend</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>MetaCoin</h1>
+  <h1>EtherFarm</h1>
   <h2>Example Truffle Dapp</h2>
-  <h3>You have <span class="black"><span id="balance"></span> META</span></h3>
-
   <br>
-  <h1>Send MetaCoin</h1>
-  <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
-  <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="send" onclick="App.sendCoin()">Send MetaCoin</button>
+  <p>Account:</p>
+  <p id="account"></p>
+  <br>
+  <span></span>
   <br><br>
-  <span id="status"></span>
+  <input type="text" id="item" placeholder="item">
+  <input type="text" id="time" placeholder="time">
+  <input type="text" id="minPrice" placeholder="min price">
+  <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
+  <br><br>
+  <h3>Auction Ids</h3>
+  <span id="auctionIds"></span>
+  <button id="getAuctionIds" onclick="App.getAuctionIds()">Get Auction Ids</button>
+  <br><br>
+  <h3>Auction</h3>
+  <input type="text" id="id">
+  <button id="getAuction" onclick="App.getAuction()">Get Auctions</button>
+  <span id="auction"></span>
+
   <br>
   <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span>
 </body>

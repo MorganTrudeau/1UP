@@ -16,6 +16,6 @@ contract TestAuctionHouse {
     Auction auction = Auction(auctionAddress);
     uint minPrice = auction.getMinPrice();
 
-    Assert.equal(minPrice, _minPrice, "Owner should have 10000 MetaCoin initially");
+    Assert.equal(minPrice, _minPrice, "Min price is wrong");
   }
 }
