@@ -3,13 +3,14 @@ import "../stylesheets/app.css";
 
 // Import libraries we need.
 import { default as Web3} from 'web3';
-import { default as contract } from 'truffle-contract'
+import { default as contract } from 'truffle-contract';
 
 // Import our contract artifacts and turn them into usable abstractions.
-import auction_artifacts from '../../build/contracts/AuctionHouse.json'
+import auctionHouse_artifact from '../../build/contracts/AuctionHouse.json';
+import auction_artifact from '../../build/contracts/Auction.json';
 
-// MetaCoin is our usable abstraction, which we'll use through the code below.
-var AuctionHouse = contract(auction_artifacts);
+var AuctionHouse = contract(auctionHouse_artifact);
+var Auction = contract(auction_artifact);
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -55,31 +56,36 @@ window.App = {
 
   getAuction: function() {
     var id = document.getElementById("id").value;
-    AuctionHouse.deployed().then(function(instance) {
-      return instance.getAuction.call(id, {from: account});
-    }).then(function(result) {
+    var auction = Auction.at(id);
+    return auction.getAuctionInfo.call(id, {from: account}).then(function(result) {
       var auctionLabel = document.getElementById("auction");
       auctionLabel.innerHTML = result.valueOf();
     });
+
+
+    // Auction.at(id).then(function(instance) {
+    //   return instance.getAuctionInfo.call(id, {from: account});
+    // }).then(function(result) {
+    //   var auctionLabel = document.getElementById("auction");
+    //   auctionLabel.innerHTML = result.valueOf();
+    // });
   },
 
   createAuction: function() {
     var beneficiary = account;
+    var biddingTime = parseInt(document.getElementById("biddingTime").value);
+    var startPrice = parseInt(document.getElementById("startPrice").value);
     var item = parseInt(document.getElementById("item").value);
-    var time = parseInt(document.getElementById("time").value);
-    var minPrice = parseInt(document.getElementById("minPrice").value);
 
     AuctionHouse.deployed().then(function(instance) {
-      return instance.createAuction(beneficiary,item,time,minPrice,{from: account});
-    }).then(function(result) {
-      console.log(result.tx);
+      instance.createAuction.call(beneficiary,biddingTime,startPrice,item,{from: account});
     });
-  }
+  },
 
 };
 
 window.addEventListener('load', function() {
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+  // // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
     // Use Mist/MetaMask's provider

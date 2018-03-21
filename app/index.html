@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EtherFarm - Truffle Webpack Demo w/ Frontend</title>
+  <title>EtherFarm</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
 </head>
 <body>
   <h1>EtherFarm</h1>
-  <h2>Example Truffle Dapp</h2>
   <br>
   <p>Account:</p>
   <p id="account"></p>
   <br>
-  <span></span>
-  <br><br>
-  <input type="text" id="item" placeholder="item">
-  <input type="text" id="time" placeholder="time">
-  <input type="text" id="minPrice" placeholder="min price">
+  <h3>Create an Auction</h3>
+  <input type="text" id="item" placeholder="Item">
+  <input type="text" id="biddingTime" placeholder="Time">
+  <input type="text" id="startPrice" placeholder="Starting Price">
   <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
   <br><br>
   <h3>Auction Ids</h3>
@@ -25,10 +23,7 @@
   <br><br>
   <h3>Auction</h3>
   <input type="text" id="id">
-  <button id="getAuction" onclick="App.getAuction()">Get Auctions</button>
+  <button id="getAuction" onclick="App.getAuction()">Get Auction</button>
   <span id="auction"></span>
-
-  <br>
-  <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span>
 </body>
 </html>

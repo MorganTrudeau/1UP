@@ -4,12 +4,12 @@ contract Auction {
     // Parameters
     address public beneficiary;
     uint public auctionEnd;
-    uint minPrice;
+    uint public item;
 
     // State
     address public highestBidder;
     uint public highestBid;
-    bool ended;
+    bool private ended;
 
     // Pending widrawals
     mapping(address => uint) pendingReturns;
@@ -22,11 +22,13 @@ contract Auction {
     function Auction(
         address _beneficiary,
         uint _biddingTime,
-        uint _minPrice
-    ) public {
+        uint _startPrice,
+        uint _item
+ 	) public {
         beneficiary = _beneficiary;
         auctionEnd = now + _biddingTime;
-        minPrice = _minPrice;
+        item = _item;
+        highestBid = _startPrice;
     }
 
     function bid() public payable {
@@ -66,7 +68,8 @@ contract Auction {
         beneficiary.transfer(highestBid);
     }
 
-    function getMinPrice() view public returns(uint) {
-        return minPrice;
+    function getAuctionInfo() public view returns(address,uint,uint,uint) {
+        return (beneficiary, auctionEnd, item, highestBid);
     }
+
 }
