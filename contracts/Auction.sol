@@ -8,6 +8,7 @@ contract Auction {
 
     // State
     address public highestBidder;
+    uint private startPrice;
     uint public highestBid;
     bool private ended;
 
@@ -28,14 +29,16 @@ contract Auction {
         beneficiary = _beneficiary;
         auctionEnd = now + _biddingTime;
         item = _item;
+        startPrice = _startPrice;
         highestBid = _startPrice;
     }
 
     function bid() public payable {
         require(now <= auctionEnd);
         require(msg.value > highestBid);
+        require(msg.sender != beneficiary);
 
-        if (highestBid != 0) {
+        if (highestBid != startPrice) {
             pendingReturns[highestBidder] += highestBid;
         }
         highestBidder = msg.sender;
@@ -44,7 +47,7 @@ contract Auction {
     }
 
     /// Withdraw a bid that was overbid.
-    function withdraw() public returns (bool) {
+    function withdraw() public returns(bool) {
         uint amount = pendingReturns[msg.sender];
         if (amount > 0) {
             pendingReturns[msg.sender] = 0;
@@ -58,6 +61,10 @@ contract Auction {
         return true;
     }
 
+    function getWithdraw(address account) public view returns(uint) {
+        return item;
+    }
+
     function auctionEnd() public {
         require(now >= auctionEnd);
         require(!ended);
@@ -69,7 +76,7 @@ contract Auction {
     }
 
     function getAuctionInfo() public view returns(address,uint,uint,uint) {
-        return (beneficiary, auctionEnd, item, highestBid);
+        return (beneficiary, highestBid, auctionEnd, item);
     }
 
 }

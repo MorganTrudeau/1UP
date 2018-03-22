@@ -1,8 +1,7 @@
 body {
-  margin-left: 25%;
-  margin-right: 25%;
-  margin-top: 10%;
+  margin: 40px;
   font-family: "Open Sans", sans-serif;
+  background-color: #ccffcc;
 }
 
 label {
@@ -14,6 +13,7 @@ input {
   width: 500px;
   padding: 5px;
   font-size: 16px;
+  display: block;
 }
 
 button {
@@ -39,14 +39,18 @@ h3 {
   font-size: 24px;
 }
 
-.black {
-  color: black;
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
 }
 
-#balance {
-  color: black;
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
 }
 
-.hint {
-  color: #666;
+tr:nth-child(even) {
+    background-color: #dddddd;
 }

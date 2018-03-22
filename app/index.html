@@ -8,8 +8,8 @@
 <body>
   <h1>EtherFarm</h1>
   <br>
-  <p>Account:</p>
-  <p id="account"></p>
+  <p style="display: inline-block; font-weight: bold;">Account:</p>
+  <p id="account" style="display: inline-block;"></p>
   <br>
   <h3>Create an Auction</h3>
   <input type="text" id="item" placeholder="Item">
@@ -17,13 +17,26 @@
   <input type="text" id="startPrice" placeholder="Starting Price">
   <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
   <br><br>
-  <h3>Auction Ids</h3>
-  <span id="auctionIds"></span>
-  <button id="getAuctionIds" onclick="App.getAuctionIds()">Get Auction Ids</button>
+  <h3>Withdraws Pending</h3>
+  <table id="withdrawTable">
+    <tr>
+      <td>ACCOUNT</td>
+    </tr>
+  </table>
   <br><br>
-  <h3>Auction</h3>
-  <input type="text" id="id">
-  <button id="getAuction" onclick="App.getAuction()">Get Auction</button>
-  <span id="auction"></span>
+  <h3>Auctions</h3>
+  <button id="getAuction" onclick="App.getAllAuctions()">Get Auctions</button>
+  <br>
+  <table id="auctionTable">
+    <tr>
+      <td>ITEM</td>
+      <td>CURRENT PRICE</td>
+      <td>END TIME</td>
+      <td>SELLER</td>
+      <td>ID</td>
+      <td>BID</td>
+    </tr>
+  </table>
+
 </body>
 </html>

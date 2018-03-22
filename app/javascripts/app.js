@@ -22,8 +22,8 @@ window.App = {
   start: function() {
     var self = this;
 
-    // Bootstrap the MetaCoin abstraction for Use.
     AuctionHouse.setProvider(web3.currentProvider);
+    Auction.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
@@ -44,41 +44,81 @@ window.App = {
     });
   },
 
-  getAuctionIds: function() {
-    AuctionHouse.deployed().then(function(instance) {
-      return instance.getAuctionIds.call({from: account});
-    }).then(function(result) {
-      var auctionIdsLabel = document.getElementById("auctionIds");
-      console.log(result);
-      auctionIdsLabel.innerHTML = result.valueOf();
-    });
-  },
-
-  getAuction: function() {
-    var id = document.getElementById("id").value;
-    var auction = Auction.at(id);
-    return auction.getAuctionInfo.call(id, {from: account}).then(function(result) {
-      var auctionLabel = document.getElementById("auction");
-      auctionLabel.innerHTML = result.valueOf();
-    });
-
-
-    // Auction.at(id).then(function(instance) {
-    //   return instance.getAuctionInfo.call(id, {from: account});
-    // }).then(function(result) {
-    //   var auctionLabel = document.getElementById("auction");
-    //   auctionLabel.innerHTML = result.valueOf();
-    // });
-  },
-
   createAuction: function() {
     var beneficiary = account;
     var biddingTime = parseInt(document.getElementById("biddingTime").value);
-    var startPrice = parseInt(document.getElementById("startPrice").value);
+    var startPrice = web3.toWei(parseInt(document.getElementById("startPrice").value), "ether");
     var item = parseInt(document.getElementById("item").value);
 
     AuctionHouse.deployed().then(function(instance) {
-      instance.createAuction.call(beneficiary,biddingTime,startPrice,item,{from: account});
+      return instance.createAuction(beneficiary,biddingTime,startPrice,item,{from: account});
+    }).then(function(auctionId) {
+      return App.getAuctionInfo(auctionId);
+    }).then(function(result) {
+        App.insertTableRow(result,auctionId);
+    });
+  },
+
+  getAllAuctions: function() {
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.getAuctionIds.call({from: account});
+    }).then(function(auctionIds) {
+      auctionIds.forEach(function(auctionId) {
+        App.getWithdraw(auctionId);
+        App.getAuctionInfo(auctionId).then(function(result) {
+          App.insertTableRow(result, auctionId);
+        });
+      });
+    });
+  },
+
+  getAuctionIds: function() {
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.getAuctionIds.call({from: account});
+    });
+  },
+
+  getAuctionInfo: function(auctionId) {
+    var auction = Auction.at(auctionId);
+    return auction.getAuctionInfo.call(auctionId, {from: account});
+  },
+
+  insertTableRow: function(result,auctionId) {
+    var auctionId = auctionId;
+    var beneficiary = result[0].valueOf();
+    var auctionEnd = result[1].valueOf();
+    var item = result[2].valueOf();
+    var price = result[3].valueOf();
+
+    var table = document.getElementById("auctionTable");
+    var row = table.insertRow(1);
+    var cell0 =row.insertCell(0);
+    var cell1 =row.insertCell(1);
+    var cell2 =row.insertCell(2);
+    var cell3 =row.insertCell(3);
+    var cell4 =row.insertCell(4);
+    var cell5 =row.insertCell(5);
+    cell0.innerHTML = item;
+    cell1.innerHTML = price;
+    cell2.innerHTML = auctionEnd;
+    cell3.innerHTML = beneficiary;
+    cell4.innerHTML = auctionId;
+    cell5.innerHTML = '<input type="text" id="${ bid }" style="width:100px;display:inline-block;margin-right:10px;"></input><button onclick="App.bid()">BID</button>'
+  },
+
+  bid: function() {
+    var auction = Auction.at("0x6f89c0aee77d112c52862f84d4545b5c658f454a");
+    auction.bid({from: account, value: web3.toWei(2, "ether")});
+  },
+
+  getWithdraw: function(auctionId) {
+    var auction = Auction.at(auctionId);
+    return auction.getWithdraw.call(account, {from: account}).then(function(result) {
+      console.log(result);
+      var table = document.getElementById("withdrawTable");
+      var row = table.insertRow(1);
+      var cell0 =row.insertCell(0);
+      cell0.innerHTML = result.valueOf();
     });
   },
 
@@ -87,13 +127,13 @@ window.App = {
 window.addEventListener('load', function() {
   // // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
-    console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
+    console.warn("Using injected web3")
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
   } else {
-    console.warn("No web3 detected. Falling back to http://127.0.0.1:7545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
+    console.warn("No web3 detected. Falling back to http://127.0.0.1:8545.");
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    window.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+    window.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
   }
 
   App.start();
