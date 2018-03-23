@@ -61,8 +61,11 @@ contract Auction {
         return true;
     }
 
-    function getWithdraw(address account) public view returns(uint) {
-        return item;
+    function getWithdraw(address account) public view returns(bool) {
+        if (pendingReturns[account] != 0) {
+            return true;
+        }
+        return false;
     }
 
     function auctionEnd() public {

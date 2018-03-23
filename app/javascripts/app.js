@@ -86,9 +86,9 @@ window.App = {
   insertTableRow: function(result,auctionId) {
     var auctionId = auctionId;
     var beneficiary = result[0].valueOf();
-    var auctionEnd = result[1].valueOf();
-    var item = result[2].valueOf();
-    var price = result[3].valueOf();
+    var auctionEnd = result[2].valueOf();
+    var item = result[3].valueOf();
+    var price = result[1].valueOf();
 
     var table = document.getElementById("auctionTable");
     var row = table.insertRow(1);
@@ -107,18 +107,19 @@ window.App = {
   },
 
   bid: function() {
-    var auction = Auction.at("0x6f89c0aee77d112c52862f84d4545b5c658f454a");
-    auction.bid({from: account, value: web3.toWei(2, "ether")});
+    var auction = Auction.at("0x60cc5aca4c23257368076c18a202f357b79b39f0");
+    auction.bid({from: account, value: web3.toWei(3, "ether")});
   },
 
   getWithdraw: function(auctionId) {
     var auction = Auction.at(auctionId);
-    return auction.getWithdraw.call(account, {from: account}).then(function(result) {
-      console.log(result);
+    auction.getWithdraw.call(account, {from: account}).then(function(result) {
       var table = document.getElementById("withdrawTable");
       var row = table.insertRow(1);
-      var cell0 =row.insertCell(0);
-      cell0.innerHTML = result.valueOf();
+      var cell0 = row.insertCell(0);
+      var cell1 = row.insertCell(1);
+      cell0.innerHTML = auctionId;
+      cell1.innerHTML = result.valueOf();
     });
   },
 

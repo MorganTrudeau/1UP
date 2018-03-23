@@ -12,8 +12,7 @@ contract AuctionHouse {
         uint _biddingTime,
         uint _startPrice,
         uint _item
-    ) 
-    public returns(address) {
+    ) public returns(address) {
         Auction id = new Auction(_beneficiary,_biddingTime,_startPrice,_item);
         auctionIds.push(id);
         return id;
