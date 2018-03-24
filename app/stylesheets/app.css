@@ -1,7 +1,8 @@
 body {
   margin: 40px;
   font-family: "Open Sans", sans-serif;
-  background-color: #ccffcc;
+  background-color: #262626;
+  color: white;
 }
 
 label {
@@ -10,15 +11,25 @@ label {
 }
 
 input {
-  width: 500px;
+  width: 200px;
+  margin-bottom: 5px;
+  margin-right: 10px;
   padding: 5px;
   font-size: 16px;
   display: block;
 }
 
+.bidInput {
+  width: 50px;
+  display: inline-block;
+}
+
 button {
-  font-size: 16px;
+  font-size: 14px;
+  margin-bottom: 5px;
   padding: 5px;
+  display: inline-block;
+  border-radius: 2px;
 }
 
 h1, h2 {
@@ -42,15 +53,15 @@ h3 {
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 100%;
 }
 
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+    padding: 8px 15px 8px 15px;
+    text-align: center;
+
 }
 
 tr:nth-child(even) {
-    background-color: #dddddd;
 }

@@ -36,10 +36,10 @@ contract Auction {
     function bid() public payable {
         require(now <= auctionEnd);
         require(msg.value > highestBid);
-        require(msg.sender != beneficiary);
+        require(msg.sender != beneficiary && msg.sender != highestBidder);
 
-        if (highestBid != startPrice) {
-            pendingReturns[highestBidder] += highestBid;
+        if (highestBidder != 0) {
+            pendingReturns[highestBidder] = highestBid;
         }
         highestBidder = msg.sender;
         highestBid = msg.value;
@@ -47,22 +47,15 @@ contract Auction {
     }
 
     /// Withdraw a bid that was overbid.
-    function withdraw() public returns(bool) {
+    function withdraw() public {
+        require(pendingReturns[msg.sender] > 0);
         uint amount = pendingReturns[msg.sender];
-        if (amount > 0) {
-            pendingReturns[msg.sender] = 0;
-
-            if (!msg.sender.send(amount)) {
-                // No need to call throw here, just reset the amount owing
-                pendingReturns[msg.sender] = amount;
-                return false;
-            }
-        }
-        return true;
+        pendingReturns[msg.sender] = 0;
+        msg.sender.transfer(amount);
     }
 
     function getWithdraw(address account) public view returns(bool) {
-        if (pendingReturns[account] != 0) {
+        if (pendingReturns[account] > 0) {
             return true;
         }
         return false;
@@ -70,6 +63,7 @@ contract Auction {
 
     function auctionEnd() public {
         require(now >= auctionEnd);
+        require(msg.sender == beneficiary);
         require(!ended);
 
         ended = true;

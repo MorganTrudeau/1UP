@@ -6,7 +6,7 @@
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>EtherFarm</h1>
+  <h1>EtherMine</h1>
   <br>
   <p style="display: inline-block; font-weight: bold;">Account:</p>
   <p id="account" style="display: inline-block;"></p>
@@ -17,26 +17,43 @@
   <input type="text" id="startPrice" placeholder="Starting Price">
   <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
   <br><br>
-  <h3>Withdraws Pending</h3>
-  <table id="withdrawTable">
-    <tr>
-      <td>AUCTION ID</td>
-      <td>PENDING WITHDRAWAL</td>
-    </tr>
-  </table>
-  <br><br>
-  <h3>Auctions</h3>
-  <button id="getAuction" onclick="App.getAllAuctions()">Get Auctions</button>
-  <br>
-  <table id="auctionTable">
-    <tr>
+  <h3>My Auctions</h3>
+  <table id="myAuctionsTable">
+    <thead>
       <td>ITEM</td>
       <td>CURRENT PRICE</td>
       <td>END TIME</td>
-      <td>SELLER</td>
-      <td>ID</td>
-      <td>BID</td>
-    </tr>
+      <td>COLLECT</td>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <br><br>
+  <h3>Withdraws Pending</h3>
+  <table id="withdrawTable">
+    <thead>
+      <tr>
+        <td>AUCTION ID</td>
+        <td>PENDING WITHDRAWAL</td>
+        <td>WITHDRAW</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <br><br>
+  <h3>Auctions</h3>
+  <table id="auctionTable">
+      <thead> 
+        <tr>
+          <td>AUCTION ID</td>
+          <td>ITEM</td>
+          <td>CURRENT PRICE</td>
+          <td>END TIME</td>
+          <td>BID</td>
+          <td>HIGHEST BIDDER</td>
+          <td>SELLER</td>
+        </tr>
+      </thead>
+      <tbody></tbody>
   </table>
 
 </body>

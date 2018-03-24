@@ -40,33 +40,40 @@ window.App = {
       accounts = accs;
       account = accounts[0];
 
-      document.getElementById("account").innerHTML = account;
+      document.getElementById("account").innerHTML = account.substring(0,6);
+      App.getAllAuctions();
     });
   },
 
   createAuction: function() {
     var beneficiary = account;
     var biddingTime = parseInt(document.getElementById("biddingTime").value);
-    var startPrice = web3.toWei(parseInt(document.getElementById("startPrice").value), "ether");
+    // var startPrice = web3.toWei(parseInt(document.getElementById("startPrice").value), "ether");
+    var startPrice = parseInt(document.getElementById("startPrice").value);
     var item = parseInt(document.getElementById("item").value);
 
     AuctionHouse.deployed().then(function(instance) {
       return instance.createAuction(beneficiary,biddingTime,startPrice,item,{from: account});
     }).then(function(auctionId) {
-      return App.getAuctionInfo(auctionId);
-    }).then(function(result) {
-        App.insertTableRow(result,auctionId);
+      App.getAllAuctions();
     });
   },
 
   getAllAuctions: function() {
+    // Reset table content
+    var auctionTableRef = document.getElementById('auctionTable').getElementsByTagName('tbody')[0];
+    var withdrawTableRef = document.getElementById('withdrawTable').getElementsByTagName('tbody')[0];
+    var myAuctionstableRef = document.getElementById('myAuctionsTable').getElementsByTagName('tbody')[0];
+    auctionTableRef.innerHTML = '';
+    withdrawTableRef.innerHTML = '';
+    myAuctionstableRef.innerHTML = '';
     AuctionHouse.deployed().then(function(instance) {
       return instance.getAuctionIds.call({from: account});
     }).then(function(auctionIds) {
       auctionIds.forEach(function(auctionId) {
         App.getWithdraw(auctionId);
         App.getAuctionInfo(auctionId).then(function(result) {
-          App.insertTableRow(result, auctionId);
+          App.constructAuctionTable(result, auctionId);
         });
       });
     });
@@ -83,45 +90,138 @@ window.App = {
     return auction.getAuctionInfo.call(auctionId, {from: account});
   },
 
-  insertTableRow: function(result,auctionId) {
+  constructAuctionTable: function(result,auctionId) {
+    var auctionId = auctionId;
+    var beneficiary = result[0].valueOf();
+    if(beneficiary == account) {
+      App.constructMyAuctionsTable(result, auctionId);
+    }
+    var auctionEnd = result[2].valueOf();
+    var item = result[3].valueOf();
+    var price = result[1].valueOf();
+
+    var auction = Auction.at(auctionId);
+    auction.highestBidder.call({ from: account }).then(function(highestBidder) {
+      var tableRef = document.getElementById('auctionTable').getElementsByTagName('tbody')[0];
+      var row   = tableRef.insertRow(0);
+      var cell0 = row.insertCell(0);
+      var cell1 = row.insertCell(1);
+      var cell2 = row.insertCell(2);
+      var cell3 = row.insertCell(3);
+      var cell4 = row.insertCell(4);
+      var cell5 = row.insertCell(5);
+      var cell6 = row.insertCell(6);
+      cell0.innerHTML = auctionId.substring(0,6);
+      cell1.innerHTML = item;
+      cell2.innerHTML = price;
+      cell3.innerHTML = App.convertTimeStamp(auctionEnd);
+      var button = App.constructButton(auctionId,"bid");
+      var input = App.constructInput("text",auctionId);
+      cell4.appendChild(input);
+      cell4.appendChild(button);
+      cell5.innerHTML = highestBidder.valueOf().substring(0,6);
+      cell6.innerHTML = beneficiary.substring(0,6);
+    })
+  },
+
+  constructMyAuctionsTable: function(result, auctionId) {
     var auctionId = auctionId;
     var beneficiary = result[0].valueOf();
     var auctionEnd = result[2].valueOf();
     var item = result[3].valueOf();
     var price = result[1].valueOf();
 
-    var table = document.getElementById("auctionTable");
-    var row = table.insertRow(1);
-    var cell0 =row.insertCell(0);
-    var cell1 =row.insertCell(1);
-    var cell2 =row.insertCell(2);
-    var cell3 =row.insertCell(3);
-    var cell4 =row.insertCell(4);
-    var cell5 =row.insertCell(5);
-    cell0.innerHTML = item;
-    cell1.innerHTML = price;
-    cell2.innerHTML = auctionEnd;
-    cell3.innerHTML = beneficiary;
-    cell4.innerHTML = auctionId;
-    cell5.innerHTML = '<input type="text" id="${ bid }" style="width:100px;display:inline-block;margin-right:10px;"></input><button onclick="App.bid()">BID</button>'
+    var auction = Auction.at(auctionId);
+    auction.highestBidder.call({ from: account }).then(function(hb) {
+      var tableRef = document.getElementById('myAuctionsTable').getElementsByTagName('tbody')[0];
+      var row   = tableRef.insertRow(0);
+      var cell0 = row.insertCell(0);
+      cell0.innerHTML = item;
+      var cell1 = row.insertCell(1);
+      cell1.innerHTML = price;
+      var cell2 = row.insertCell(2);
+      cell2.innerHTML = App.convertTimeStamp(auctionEnd);
+      var cell3 = row.insertCell(3);
+      var button = App.constructButton(auctionId,"collect");
+      cell3.appendChild(button);
+    })
   },
 
-  bid: function() {
-    var auction = Auction.at("0x60cc5aca4c23257368076c18a202f357b79b39f0");
-    auction.bid({from: account, value: web3.toWei(3, "ether")});
+  bid: function(auctionId) {
+    var value = document.getElementById(auctionId).value;
+    var auction = Auction.at(auctionId);
+    auction.bid({from: account, value: value});
   },
 
   getWithdraw: function(auctionId) {
     var auction = Auction.at(auctionId);
     auction.getWithdraw.call(account, {from: account}).then(function(result) {
-      var table = document.getElementById("withdrawTable");
-      var row = table.insertRow(1);
+      var withdrawTableRef = document.getElementById('withdrawTable').getElementsByTagName('tbody')[0];
+      var row = withdrawTableRef.insertRow(0);
       var cell0 = row.insertCell(0);
       var cell1 = row.insertCell(1);
-      cell0.innerHTML = auctionId;
+      var cell2 = row.insertCell(2);
+      cell0.innerHTML = auctionId.substring(0,6);
       cell1.innerHTML = result.valueOf();
+      var button = App.constructButton(auctionId,"withdraw");
+      cell2.appendChild(button);
     });
   },
+
+  withdraw: function(auctionId) {
+    var auction = Auction.at(auctionId);
+    auction.withdraw({from: account, gas:3000000});
+  },
+
+  auctionEnd: function(auctionId) {
+    var auction = Auction.at(auctionId);
+    auction.auctionEnd({from: account, gas:3000000});
+  },
+
+  constructButton: function(auctionId, type) {
+    var button = document.createElement("button");
+    switch(type) {
+        case "withdraw":
+            var buttonText = document.createTextNode("WITHDRAW");
+            button.onclick = function() {
+              App.withdraw(auctionId)
+            };
+            button.appendChild(buttonText);
+            return button;
+        case "bid":
+            var buttonText = document.createTextNode("BID");
+            button.onclick = function() {
+              App.bid(auctionId)
+            };
+            button.appendChild(buttonText);
+            return button;
+        case "collect":
+            var buttonText = document.createTextNode("COLLECT");
+            button.onclick = function() {
+              App.auctionEnd(auctionId)
+            };
+            button.appendChild(buttonText);
+            return button;
+        default:
+            break;
+    }
+  },
+
+  constructInput: function(type,auctionId) {
+    var input = document.createElement("input");
+    input.id = auctionId;
+    input.type = type;
+    input.className = "bidInput"
+    return input;
+  },
+
+  //timestamp conversion
+  convertTimeStamp: function(timestamp) {
+    var d = new Date(timestamp*1000);
+    var date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + " " + d.getHours() + ':' + d.getMinutes();
+
+    return date;
+  }
 
 };
 
