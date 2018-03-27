@@ -6,55 +6,86 @@
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>EtherMine</h1>
-  <br>
-  <p style="display: inline-block; font-weight: bold;">Account:</p>
-  <p id="account" style="display: inline-block;"></p>
-  <br>
-  <h3>Create an Auction</h3>
-  <input type="text" id="item" placeholder="Item">
-  <input type="text" id="biddingTime" placeholder="Time">
-  <input type="text" id="startPrice" placeholder="Starting Price">
-  <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
-  <br><br>
-  <h3>My Auctions</h3>
-  <table id="myAuctionsTable">
-    <thead>
-      <td>ITEM</td>
-      <td>CURRENT PRICE</td>
-      <td>END TIME</td>
-      <td>COLLECT</td>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <br><br>
-  <h3>Withdraws Pending</h3>
-  <table id="withdrawTable">
-    <thead>
-      <tr>
-        <td>AUCTION ID</td>
-        <td>PENDING WITHDRAWAL</td>
-        <td>WITHDRAW</td>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <br><br>
-  <h3>Auctions</h3>
-  <table id="auctionTable">
-      <thead> 
-        <tr>
-          <td>AUCTION ID</td>
-          <td>ITEM</td>
-          <td>CURRENT PRICE</td>
-          <td>END TIME</td>
-          <td>BID</td>
-          <td>HIGHEST BIDDER</td>
-          <td>SELLER</td>
-        </tr>
-      </thead>
-      <tbody></tbody>
-  </table>
+  <div class="header">
+    <div class="flexColumn">
+      <h1>EtherMine</h1>
+    </div>
+    <div class="flexRow">
+      <input type="text" class="headerInput"><button class="headerButton" style="display: inline-block; width: 70px;">SEARCH</button>
+    </div>
+    <div class="flexColumn">
+      <div>
+        <span style="display: inline-block; font-weight: bold;">Account:</span>
+        <span id="account" style="display: inline-block; margin-right: 10px;"></span>
+      </div>
+      <div>
+        <span style="display: inline-block; font-weight: bold;">Balance:</span>
+        <span id="balance" style="display: inline-block;"></span>
+      </div>
+    </div>
+  </div>
 
+  <div class="wrapper">
+    <div class="content">
+
+      <div id="createAuctionCell">
+        <h3>Create an Auction</h3>
+        <input type="text" class="createAuctionInput" id="item" placeholder="Item">
+        <input type="text" class="createAuctionInput" id="biddingTime" placeholder="Time">
+        <input type="text" class="createAuctionInput" id="startPrice" placeholder="Starting Price">
+        <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
+      </div>
+
+      <div class="cell" id="manageAuctionsCell">
+        <div>
+          <h3>My Auctions</h3>
+          <table id="myAuctionsTable">
+            <thead>
+              <tr>
+                <th>ITEM</th>
+                <th>CURRENT PRICE</th>
+                <th>END TIME</th>
+                <th>COLLECT</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div>
+          <h3>Withdraws Pending</h3>
+          <table id="withdrawTable">
+            <thead>
+              <tr>
+                <th>AUCTION ID</th>
+                <th>PENDING WITHDRAWAL</th>
+                <th>WITHDRAW</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="openAuctionsCell">
+        <h3>Auctions</h3>
+        <table id="auctionTable">
+          <thead> 
+            <tr>
+              <th>AUCTION ID</th>
+              <th>ITEM</th>
+              <th>CURRENT PRICE</th>
+              <th>END TIME</th>
+              <th>BID</th>
+              <th>HIGHEST BIDDER</th>
+              <th>SELLER</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+  <div class="footer"></div>
 </body>
 </html>

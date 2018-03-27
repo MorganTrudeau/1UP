@@ -16,6 +16,7 @@ contract Auction {
     mapping(address => uint) pendingReturns;
 
     // Events
+    event AuctionCreated();
     event HighestBidIncreased(address bidder, uint amount);
     event AuctionEnded(address winner, uint amount);
 
@@ -31,6 +32,7 @@ contract Auction {
         item = _item;
         startPrice = _startPrice;
         highestBid = _startPrice;
+        AuctionCreated();
     }
 
     function bid() public payable {
@@ -64,6 +66,7 @@ contract Auction {
     function auctionEnd() public {
         require(now >= auctionEnd);
         require(msg.sender == beneficiary);
+        require(highestBid > startPrice);
         require(!ended);
 
         ended = true;

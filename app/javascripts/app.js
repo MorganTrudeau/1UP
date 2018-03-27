@@ -39,8 +39,14 @@ window.App = {
 
       accounts = accs;
       account = accounts[0];
-
       document.getElementById("account").innerHTML = account.substring(0,6);
+      web3.fromWei(web3.eth.getBalance(account, function(error, result) {
+        if (error != null) {
+          console.log(error);
+        } else {
+          document.getElementById("balance").innerHTML = web3.fromWei(result.valueOf(), "ether") + " ETH";
+        }
+      }));
       App.getAllAuctions();
     });
   },
@@ -54,19 +60,12 @@ window.App = {
 
     AuctionHouse.deployed().then(function(instance) {
       return instance.createAuction(beneficiary,biddingTime,startPrice,item,{from: account});
-    }).then(function(auctionId) {
-      App.getAllAuctions();
+    }).then(function(result) {
+      App.watchBlocks(result.tx);
     });
   },
 
   getAllAuctions: function() {
-    // Reset table content
-    var auctionTableRef = document.getElementById('auctionTable').getElementsByTagName('tbody')[0];
-    var withdrawTableRef = document.getElementById('withdrawTable').getElementsByTagName('tbody')[0];
-    var myAuctionstableRef = document.getElementById('myAuctionsTable').getElementsByTagName('tbody')[0];
-    auctionTableRef.innerHTML = '';
-    withdrawTableRef.innerHTML = '';
-    myAuctionstableRef.innerHTML = '';
     AuctionHouse.deployed().then(function(instance) {
       return instance.getAuctionIds.call({from: account});
     }).then(function(auctionIds) {
@@ -74,6 +73,7 @@ window.App = {
         App.getWithdraw(auctionId);
         App.getAuctionInfo(auctionId).then(function(result) {
           App.constructAuctionTable(result, auctionId);
+          App.constructMyAuctionsTable(result, auctionId);
         });
       });
     });
@@ -93,12 +93,9 @@ window.App = {
   constructAuctionTable: function(result,auctionId) {
     var auctionId = auctionId;
     var beneficiary = result[0].valueOf();
-    if(beneficiary == account) {
-      App.constructMyAuctionsTable(result, auctionId);
-    }
     var auctionEnd = result[2].valueOf();
     var item = result[3].valueOf();
-    var price = result[1].valueOf();
+    var price = result[1].valueOf() + " ETH";
 
     var auction = Auction.at(auctionId);
     auction.highestBidder.call({ from: account }).then(function(highestBidder) {
@@ -125,14 +122,13 @@ window.App = {
   },
 
   constructMyAuctionsTable: function(result, auctionId) {
-    var auctionId = auctionId;
     var beneficiary = result[0].valueOf();
-    var auctionEnd = result[2].valueOf();
-    var item = result[3].valueOf();
-    var price = result[1].valueOf();
+    if(beneficiary == account) {
+      var auctionId = auctionId;
+      var auctionEnd = result[2].valueOf();
+      var item = result[3].valueOf();
+      var price = result[1].valueOf() + " ETH";
 
-    var auction = Auction.at(auctionId);
-    auction.highestBidder.call({ from: account }).then(function(hb) {
       var tableRef = document.getElementById('myAuctionsTable').getElementsByTagName('tbody')[0];
       var row   = tableRef.insertRow(0);
       var cell0 = row.insertCell(0);
@@ -144,7 +140,7 @@ window.App = {
       var cell3 = row.insertCell(3);
       var button = App.constructButton(auctionId,"collect");
       cell3.appendChild(button);
-    })
+    }
   },
 
   bid: function(auctionId) {
@@ -215,12 +211,38 @@ window.App = {
     return input;
   },
 
-  //timestamp conversion
   convertTimeStamp: function(timestamp) {
     var d = new Date(timestamp*1000);
-    var date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + " " + d.getHours() + ':' + d.getMinutes();
+    var minutes = d.getMinutes();
+    if (minutes/10 < 1) {
+      var minutes = "0" + minutes;
+    }
+    var date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + " " + d.getHours() + ':' + minutes;
 
     return date;
+  },
+
+  watchBlocks: function(txHash) {
+    var filter = web3.eth.filter('lastest');
+    filter.watch(function(error,result) {
+      if(error) {
+        console.log(error)
+      } else {
+        web3.eth.getBlock(result.blockNumber, function(error, block) {
+          if (error) {
+            console.log(error);
+          } else {
+            var transactions = block.transactions;
+            transactions.forEach(function(transaction) {
+              if (txHash == transaction) {
+                App.getAllAuctions();
+                filter.stopWatching();
+              }
+            })
+          }
+        });
+      }
+    })
   }
 
 };
