@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EtherFarm</title>
+  <title>1UP</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
 </head>
 <body>
   <div class="header">
-    <div class="flexColumn">
-      <h1>EtherMine</h1>
+    <div class="flexRow">
+      <h1>1UP</h1><img src="diamond.png" height="50px" style="margin: -10px 0px 0px 10px">
     </div>
     <div class="flexRow">
       <input type="text" class="headerInput"><button class="headerButton" style="display: inline-block; width: 70px;">SEARCH</button>
@@ -24,47 +24,17 @@
       </div>
     </div>
   </div>
+  <div class="navWrapper">
+    <div class="nav">
+      <div class="navCell active"><a href="/">Home</a></div>
+      <div class="navCell"><a href="myauctions.html">My Auctions</a></div>
+      <div class="navCell"><a href="create.html">Create</a></div>
+    </div>
+  </div>
+  
 
   <div class="wrapper">
     <div class="content">
-
-      <div id="createAuctionCell">
-        <h3>Create an Auction</h3>
-        <input type="text" class="createAuctionInput" id="item" placeholder="Item">
-        <input type="text" class="createAuctionInput" id="biddingTime" placeholder="Time">
-        <input type="text" class="createAuctionInput" id="startPrice" placeholder="Starting Price">
-        <button id="createAuction" onclick="App.createAuction()">Create Auction</button>
-      </div>
-
-      <div class="cell" id="manageAuctionsCell">
-        <div>
-          <h3>My Auctions</h3>
-          <table id="myAuctionsTable">
-            <thead>
-              <tr>
-                <th>ITEM</th>
-                <th>CURRENT PRICE</th>
-                <th>END TIME</th>
-                <th>COLLECT</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div>
-          <h3>Withdraws Pending</h3>
-          <table id="withdrawTable">
-            <thead>
-              <tr>
-                <th>AUCTION ID</th>
-                <th>PENDING WITHDRAWAL</th>
-                <th>WITHDRAW</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
 
       <div id="openAuctionsCell">
         <h3>Auctions</h3>
