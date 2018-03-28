@@ -5,12 +5,12 @@ var app = express();
 // Define the port to run on
 app.set('port', 3000);
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static('build'));
 
 require('./app/javascripts/app.js')(app);
 
 app.get('*', (req res) => {
-	res.sendFile(path.resolve(path.join(__dirname, 'build'), 'index.html'));
+	res.sendFile(path.resolve('build'), 'index.html');
 });
 
 // Listen for requests
