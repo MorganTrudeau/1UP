@@ -5,7 +5,7 @@ var app = express();
 // Define the port to run on
 app.set('port', 3000);
 
-app.use(express.static(path.join(__dirname, 'app')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // Listen for requests
 var server = app.listen(app.get('port'), function() {
