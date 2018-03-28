@@ -108,6 +108,13 @@ window.App = {
       var cell4 = row.insertCell(4);
       var cell5 = row.insertCell(5);
       var cell6 = row.insertCell(6);
+      cell0.id = "auctionIdtd";
+      cell1.id - "itemTableCell";
+      cell2.id = "priceTableCell";
+      cell3.id = "auctionEndTableCell";
+      cell4.id = "bidTableCell";
+      cell5.id = "highestBidderTableCell";
+      cell6.id = "sellerTableCell";
       cell0.innerHTML = auctionId.substring(0,6);
       cell1.innerHTML = item;
       cell2.innerHTML = price;
@@ -132,12 +139,15 @@ window.App = {
       var tableRef = document.getElementById('myAuctionsTable').getElementsByTagName('tbody')[0];
       var row   = tableRef.insertRow(0);
       var cell0 = row.insertCell(0);
-      cell0.innerHTML = item;
       var cell1 = row.insertCell(1);
-      cell1.innerHTML = price;
       var cell2 = row.insertCell(2);
-      cell2.innerHTML = App.convertTimeStamp(auctionEnd);
       var cell3 = row.insertCell(3);
+      cell0.id - "itemTableCell";
+      cell1.id = "priceTableCell";
+      cell2.id = "auctionEndTableCell";
+      cell0.innerHTML = item;
+      cell1.innerHTML = price;
+      cell2.innerHTML = App.convertTimeStamp(auctionEnd);
       var button = App.constructButton(auctionId,"collect");
       cell3.appendChild(button);
     }

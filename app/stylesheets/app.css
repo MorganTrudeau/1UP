@@ -191,5 +191,25 @@ a {
 
 #openAuctionsCell {
   text-align: center;
-  padding: 40px 20px 40px 20px;
+  padding: 40px 20px 60px 20px;
+}
+
+#auctionTable {
+  width: 90%;
+}
+
+#itemTableCell {
+  text-align: left;
+}
+
+#priceTableCell {
+  text-align: right;
+}
+
+#auctionEndTableCell {
+  text-align: right;
+}
+
+#bidTableCell {
+  text-align: center;
 }
