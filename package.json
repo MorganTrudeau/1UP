@@ -9,6 +9,9 @@
   },
   "author": "Douglas von Kohorn",
   "license": "MIT",
+  "engines": {
+    "node": "6.11.3"
+  },
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-core": "^6.22.1",
@@ -33,5 +36,8 @@
     "web3": "^0.20.0",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.3.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
   }
 }
