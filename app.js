@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 require('./app/javascripts/app.js')(app);
 
 app.get('*', (req res) => {
-	res.sendFile(path.resolve(_dirname, 'index.html'));
+	res.sendFile(path.resolve(path.join(__dirname, 'build'), 'index.html'));
 });
 
 // Listen for requests
