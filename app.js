@@ -5,5 +5,5 @@ const PORT = process.env.PORT || 5000
 express()
   .use(express.static(path.join(__dirname, 'app')))
   .set('build', path.join(__dirname, 'build'))
-  .get('/', (req, res) => res.render('index'))
+  .get('/', (req, res) => res.render('app.js'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
