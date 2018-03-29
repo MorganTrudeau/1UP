@@ -10,30 +10,28 @@ Until contracts have been deployed to the Ropsten Testnet this project can be te
 
 ## Testing Locally
 
-- Download ```ganache-cli'```
+Download ```ganache-cli'```
 
 ```npm install -g ganache-cli```
 
-- Start ganache by running
+Start ganache by running
 
 ```ganache-cli -b 5```
 
-- Install ```truffle```
+
+Install ```truffle```
 
 ```npm install -g truffle```
 
-- Compile contracts
+Compile contracts
 
 ```truffle compile```
 
-- Migrate contracts
+Migrate contracts
 
 ```truffle migrate```
 
-- Install the [MetaMask](https://metamask.io/) Chrome plugin
 
-- Open [1UP](https://polar-retreat-48757.herokuapp.com/) and try it out!
+Install the [MetaMask](https://metamask.io/) Chrome plugin
 
-
-
-
+Open [1UP](https://polar-retreat-48757.herokuapp.com/) and try it out!
