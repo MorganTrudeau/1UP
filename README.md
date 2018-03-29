@@ -18,6 +18,7 @@ Start ganache by running
 
 ```ganache-cli -b 5```
 
+<br/>
 
 Install ```truffle```
 
@@ -31,7 +32,10 @@ Migrate contracts
 
 ```truffle migrate```
 
+<br/>
 
 Install the [MetaMask](https://metamask.io/) Chrome plugin
+
+<br/>
 
 Open [1UP](https://polar-retreat-48757.herokuapp.com/) and try it out!
