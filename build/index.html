@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>1UP</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <script src="./app.js"></script>
+</head>
+<body>
+  <div class="header">
+    <div class="flexRow">
+      <h1>1UP</h1><img src="diamond.png" height="50px" style="margin: -10px 0px 0px 10px">
+    </div>
+    <div class="flexRow">
+      <input type="text" class="headerInput"><button class="headerButton" style="display: inline-block; width: 70px;">SEARCH</button>
+    </div>
+    <div class="flexColumn">
+      <div>
+        <span style="display: inline-block; font-weight: bold;">Account:</span>
+        <span id="account" style="display: inline-block; margin-right: 10px;"></span>
+      </div>
+      <div>
+        <span style="display: inline-block; font-weight: bold;">Balance:</span>
+        <span id="balance" style="display: inline-block;"></span>
+      </div>
+    </div>
+  </div>
+  <div class="navWrapper">
+    <div class="nav">
+      <div class="navCell active"><a href="/">Home</a></div>
+      <div class="navCell"><a href="myauctions.html">My Auctions</a></div>
+      <div class="navCell"><a href="create.html">Create</a></div>
+    </div>
+  </div>
+  
+
+  <div class="wrapper">
+    <div class="content">
+
+      <div id="openAuctionsCell">
+        <h3>Auctions</h3>
+        <table id="auctionTable">
+          <thead> 
+            <tr>
+              <th>AUCTION ID</th>
+              <th>ITEM</th>
+              <th>CURRENT PRICE</th>
+              <th>END TIME</th>
+              <th>BID</th>
+              <th>HIGHEST BIDDER</th>
+              <th>SELLER</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+  <div class="footer"></div>
+</body>
+</html>
