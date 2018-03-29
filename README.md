@@ -4,7 +4,7 @@
 
 This Dapp (Distributed Application) was built using Truffle, TestRPC, and MetaMask for web3 injection.
 
-This web application is hosted on Heroku and is fully functional running contracts on the TestRPC.
+It is hosted on Heroku and is fully functional running contracts on the TestRPC.
 
 Until contracts have been deployed to the Ropsten Testnet this project can be tested by cloning projects and downloading dependencies.
 
