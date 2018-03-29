@@ -34,9 +34,9 @@ Migrate contracts
 
 <br/>
 
-Install the [MetaMask](https://metamask.io/) Chrome plugin.
-Login to MetaMask using mnemonic provided by ganache-cli.
-Connect MetaMask to localhost:8545.
+Install the [MetaMask](https://metamask.io/) Chrome plugin.<br/>
+Login to MetaMask using mnemonic provided by ganache-cli.<br/>
+Connect MetaMask to localhost:8545.<br/>
 
 <br/>
 
