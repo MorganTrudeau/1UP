@@ -1,20 +1,9 @@
-var express = require('express');
-var path = require('path');
-var app = express();
+const express = require('express')
+const path = require('path')
+const PORT = process.env.PORT || 5000
 
-// Define the port to run on
-app.set('port', 3000);
-
-app.use(express.static('build'));
-
-require('./app/javascripts/app.js')(app);
-
-app.get('*', (req res) => {
-	res.sendFile(path.resolve('build'), 'index.html');
-});
-
-// Listen for requests
-var server = app.listen(app.get('port'), function() {
-  var port = server.address().port;
-  console.log('Magic happens on port ' + port);
-});
+express()
+  .use(express.static(path.join(__dirname, 'app')))
+  .set('build', path.join(__dirname, 'build'))
+  .get('/', (req, res) => res.render('index'))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`))

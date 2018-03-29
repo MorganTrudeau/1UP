@@ -1,5 +1,5 @@
 {
-  "name": "truffle-init-webpack",
+  "name": "auction_house",
   "version": "0.0.2",
   "description": "Auction House",
   "scripts": {
@@ -9,10 +9,11 @@
     "postinstall": "webpack -p",
     "start": "node app.js"
   },
+  "main": "app.js",
   "author": "Douglas von Kohorn",
   "license": "MIT",
   "engines": {
-    "node": "6.11.3"
+    "node": "9.10.0"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
@@ -41,5 +42,10 @@
   },
   "dependencies": {
     "express": "^4.16.3"
-  }
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ]
 }
