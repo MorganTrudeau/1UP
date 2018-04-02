@@ -40,6 +40,7 @@ window.App = {
       accounts = accs;
       account = accounts[0];
       document.getElementById("account").innerHTML = account.substring(0,6);
+
       web3.fromWei(web3.eth.getBalance(account, function(error, result) {
         if (error != null) {
           console.log(error);
@@ -47,36 +48,20 @@ window.App = {
           document.getElementById("balance").innerHTML = web3.fromWei(result.valueOf(), "ether") + " ETH";
         }
       }));
-      App.getAllAuctions();
     });
-  },
 
-  createAuction: function() {
-    var beneficiary = account;
-    var biddingTime = parseInt(document.getElementById("biddingTime").value);
-    // var startPrice = web3.toWei(parseInt(document.getElementById("startPrice").value), "ether");
-    var startPrice = parseInt(document.getElementById("startPrice").value);
-    var item = parseInt(document.getElementById("item").value);
+    // Display balance
+    
 
-    AuctionHouse.deployed().then(function(instance) {
-      return instance.createAuction(beneficiary,biddingTime,startPrice,item,{from: account});
-    }).then(function(result) {
-      App.watchBlocks(result.tx);
-    });
-  },
-
-  getAllAuctions: function() {
-    AuctionHouse.deployed().then(function(instance) {
-      return instance.getAuctionIds.call({from: account});
-    }).then(function(auctionIds) {
-      auctionIds.forEach(function(auctionId) {
-        App.getWithdraw(auctionId);
-        App.getAuctionInfo(auctionId).then(function(result) {
-          App.constructAuctionTable(result, auctionId);
-          App.constructMyAuctionsTable(result, auctionId);
-        });
-      });
-    });
+    switch(document.getElementsByTagName('body')[0].className) {
+      case 'index':
+        App.getAllAuctions();
+        break;
+      case 'myauctions':
+        App.getMyAuctions();
+      default:
+        break;
+    }
   },
 
   getAuctionIds: function() {
@@ -88,6 +73,18 @@ window.App = {
   getAuctionInfo: function(auctionId) {
     var auction = Auction.at(auctionId);
     return auction.getAuctionInfo.call(auctionId, {from: account});
+  },
+
+  getAllAuctions: function() {
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.getAuctionIds.call({from: account});
+    }).then(function(auctionIds) {
+      auctionIds.forEach(function(auctionId) {
+        App.getAuctionInfo(auctionId).then(function(result) {
+          App.constructAuctionTable(result, auctionId);
+        });
+      });
+    });
   },
 
   constructAuctionTable: function(result,auctionId) {
@@ -128,6 +125,19 @@ window.App = {
     })
   },
 
+  getMyAuctions: function() {
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.getAuctionIds.call({from: account});
+    }).then(function(auctionIds) {
+      auctionIds.forEach(function(auctionId) {
+        App.getWithdrawals(auctionId);
+        App.getAuctionInfo(auctionId).then(function(result) {
+          App.constructMyAuctionsTable(result, auctionId);
+        });
+      });
+    });
+  },
+
   constructMyAuctionsTable: function(result, auctionId) {
     var beneficiary = result[0].valueOf();
     if(beneficiary == account) {
@@ -153,30 +163,48 @@ window.App = {
     }
   },
 
+  getWithdrawals: function(auctionId) {
+    var auction = Auction.at(auctionId);
+    auction.getWithdraw.call(account, {from: account}).then(function(result) {
+      App.constructWithdrawalsTable(auctionId, result);
+    });
+  },
+
+  constructWithdrawalsTable: function(auctionId, result) {
+    var withdrawTableRef = document.getElementById('withdrawTable').getElementsByTagName('tbody')[0];
+    var row = withdrawTableRef.insertRow(0);
+    var cell0 = row.insertCell(0);
+    var cell1 = row.insertCell(1);
+    var cell2 = row.insertCell(2);
+    cell0.innerHTML = auctionId.substring(0,6);
+    cell1.innerHTML = result.valueOf();
+    var button = App.constructButton(auctionId,"withdraw");
+    cell2.appendChild(button);
+  },
+
+  withdraw: function(auctionId) {
+    var auction = Auction.at(auctionId);
+    auction.withdraw({from: account, gas:3000000});
+  },
+
   bid: function(auctionId) {
     var value = document.getElementById(auctionId).value;
     var auction = Auction.at(auctionId);
     auction.bid({from: account, value: value});
   },
 
-  getWithdraw: function(auctionId) {
-    var auction = Auction.at(auctionId);
-    auction.getWithdraw.call(account, {from: account}).then(function(result) {
-      var withdrawTableRef = document.getElementById('withdrawTable').getElementsByTagName('tbody')[0];
-      var row = withdrawTableRef.insertRow(0);
-      var cell0 = row.insertCell(0);
-      var cell1 = row.insertCell(1);
-      var cell2 = row.insertCell(2);
-      cell0.innerHTML = auctionId.substring(0,6);
-      cell1.innerHTML = result.valueOf();
-      var button = App.constructButton(auctionId,"withdraw");
-      cell2.appendChild(button);
-    });
-  },
+  createAuction: function() {
+    var beneficiary = account;
+    var biddingTime = parseInt(document.getElementById("biddingTime").value);
+    // var startPrice = web3.toWei(parseInt(document.getElementById("startPrice").value), "ether");
+    var startPrice = parseInt(document.getElementById("startPrice").value);
+    var item = parseInt(document.getElementById("item").value);
 
-  withdraw: function(auctionId) {
-    var auction = Auction.at(auctionId);
-    auction.withdraw({from: account, gas:3000000});
+    AuctionHouse.deployed().then(function(instance) {
+      return instance.createAuction(beneficiary,biddingTime,startPrice,item,{from: account});
+    }).then(function(result) {
+      App.watchBlocks(result.tx);
+    });
   },
 
   auctionEnd: function(auctionId) {

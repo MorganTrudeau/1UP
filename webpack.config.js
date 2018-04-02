@@ -15,7 +15,7 @@ module.exports = {
       { from: './app/index.html', to: "index.html" },
       { from: './app/myauctions.html', to: "myauctions.html" },
       { from: './app/create.html', to: "create.html" },
-      { from: './app/diamond.png', to: "diamond.png" }
+      { from: './app/images/diamond.png', to: "diamond.png" }
 
     ])
   ],
