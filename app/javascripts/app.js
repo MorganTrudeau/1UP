@@ -99,7 +99,7 @@ window.App = {
 
     var auction = Auction.at(auctionId);
     auction.highestBidder.call({ from: account }).then(function(highestBidder) {
-      var tableRef = document.getElementById('auctionTable').getElementsByTagName('tbody')[0];
+      var tableRef = document.getElementById('openAuctionsTable').getElementsByTagName('tbody')[0];
       var row   = tableRef.insertRow(0);
       var cell0 = row.insertCell(0);
       var cell1 = row.insertCell(1);
@@ -108,13 +108,13 @@ window.App = {
       var cell4 = row.insertCell(4);
       var cell5 = row.insertCell(5);
       var cell6 = row.insertCell(6);
-      cell0.id = "auctionIdtd";
-      cell1.id - "itemTableCell";
-      cell2.id = "priceTableCell";
-      cell3.id = "auctionEndTableCell";
-      cell4.id = "bidTableCell";
-      cell5.id = "highestBidderTableCell";
-      cell6.id = "sellerTableCell";
+      cell0.id = "id";
+      cell1.id - "item";
+      cell2.id = "price";
+      cell3.id = "time";
+      cell4.id = "bid";
+      cell5.id = "bidder";
+      cell6.id = "seller";
       cell0.innerHTML = auctionId.substring(0,6);
       cell1.innerHTML = item;
       cell2.innerHTML = price;
@@ -196,6 +196,7 @@ window.App = {
             return button;
         case "bid":
             var buttonText = document.createTextNode("BID");
+            button.id = "bidButton";
             button.onclick = function() {
               App.bid(auctionId)
             };
@@ -217,7 +218,7 @@ window.App = {
     var input = document.createElement("input");
     input.id = auctionId;
     input.type = type;
-    input.className = "bidInput"
+    input.id = "bidInput"
     return input;
   },
 
